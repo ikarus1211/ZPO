@@ -187,7 +187,9 @@ def bin_watermark(orig, wm, key):
     order = list(range(len(rav_wm)))
     random.seed(key)
     random.shuffle(order)
-    rav_wm = np.array(rav_wm)[order]
+    print(len(order))
+    rav_wm = [rav_wm[i] for i in order]
+    print(rav_wm)
     #############################################################
     #cv.imshow('scrambled', rav_wm.reshape([64, 64]))
     #############################################################
@@ -238,9 +240,10 @@ def inverse_reordering(decoded, order):
 def bin_extract(orig, key):
     _block_size = 8
     # Recreate the shuffle order for backward reshuffling
-    order = list(range(len(w_mark)))
+    order = list(range(4096))
     random.seed(key)
     random.shuffle(order)
+    print(len(order))
     # Return values
     wms = []
     decoded = np.zeros(64*64)
@@ -272,14 +275,14 @@ def bin_extract(orig, key):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    orig = cv.imread('C:/Users/ikaru/PycharmProjects/ZPO/data/lena.png')
-    wm = cv.imread('C:/Users/ikaru/PycharmProjects/ZPO/data/logo.png')
+    orig = cv.imread('data/lena.png')
+    wm = cv.imread('data/logo.png')
     img = cv.cvtColor(orig, cv.COLOR_BGR2GRAY)
     w_mark = cv.cvtColor(wm, cv.COLOR_RGB2GRAY)
 
     #bin_wmark = cv.adaptiveThreshold(w_mark, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2)
     bin_wmark = cv.threshold(w_mark, 200, 255, cv.THRESH_BINARY)[1]
-    cv.imshow('wm', bin_wmark)
+
     key = 10
     print(int(1/2))
     #watermarked = dct_watermark(img, w_mark, 'RANDOM', alpha=0.1, par1=key)
